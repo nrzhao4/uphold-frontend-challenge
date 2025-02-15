@@ -21,23 +21,39 @@ function AmountCurrencyItem({ amount, currencyId, isLoading }) {
     <div className="amount-currency-item">
       {!isLoading && (
         <>
-          <strong>{formattedAmount()}</strong>
+          <strong data-testid="formatted-amount">{formattedAmount()}</strong>
           <span className="currency-name">
             <Avatar
+              data-testid="currency-avatar"
               alt={currencyId}
               src={supportedCurrenciesIcons[currencyId.toLowerCase()]}
               sx={{ width: 16, height: 16 }}
             />
-            <strong>{currencyId}</strong>
+            <strong data-testid="currency-name">{currencyId}</strong>
           </span>
         </>
       )}
       {isLoading && (
         <>
-          <Skeleton variant="rounded" width={64} height={18} />
+          <Skeleton
+            variant="rounded"
+            width={64}
+            height={18}
+            data-testid="loading-skeleton"
+          />
           <span className="currency-name">
-            <Skeleton variant="circular" width={16} height={16} />
-            <Skeleton variant="rounded" width={24} height={18} />
+            <Skeleton
+              variant="circular"
+              width={16}
+              height={16}
+              data-testid="loading-skeleton"
+            />
+            <Skeleton
+              variant="rounded"
+              width={24}
+              height={18}
+              data-testid="loading-skeleton"
+            />
           </span>
         </>
       )}

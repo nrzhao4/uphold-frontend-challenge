@@ -61,7 +61,7 @@ function CurrencyInput({
         disabled={isDisabled}
         className="input"
       />
-      <div className="menu-chip">
+      <div className="menu-chip" role="button">
         <CurrencyChipCustom
           currency={selectedCurrency}
           showDropdownIcon
@@ -73,7 +73,6 @@ function CurrencyInput({
           id="currency-select-button"
         />
       </div>
-
       <Menu
         id="currency-select"
         anchorEl={anchorEl}

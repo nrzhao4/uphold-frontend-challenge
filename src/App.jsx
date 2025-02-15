@@ -4,6 +4,7 @@ import upholdSdk from "./utils/uphold-sdk";
 import CurrencyInput from "./components/CurrencyInput/CurrencyInput";
 import AmountCurrencyItem from "./components/AmountCurrencyItem/AmountCurrencyItem";
 import { supportedCurrencies } from "./constants/supported-currencies";
+import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 
 function App() {
   const [currencyOptions, setCurrencyOptions] = useState([]);
@@ -11,6 +12,8 @@ function App() {
   const [currency, setCurrency] = useState("USD");
   const [pairExchangeRates, setPairExchangeRates] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [cache, setCache] = useState({});
 
   useEffect(() => {
     setCurrencyOptions(supportedCurrencies);
@@ -18,9 +21,21 @@ function App() {
   });
 
   useEffect(() => {
-    const pairs = definePairs();
-    fetchPairExchangeRate(pairs);
+    getTickers();
   }, [currency]);
+
+  const getTickers = async () => {
+    if (cache[currency] !== undefined) {
+      getResultsFromCache();
+      return;
+    }
+
+    setIsLoading(true);
+    const pairs = definePairs();
+    const rates = await fetchTickers();
+    handleTickersResult(pairs, rates);
+    setIsLoading(false);
+  };
 
   const definePairs = () => {
     const pairs = {};
@@ -30,27 +45,38 @@ function App() {
         pairs[pairName] = null;
       }
     });
-    console.log(pairs);
     return pairs;
   };
 
-  const fetchPairExchangeRate = async (pairs) => {
-    setIsLoading(true);
-    const keys = Object.keys(pairs);
-    for (const key of keys) {
-      try {
-        const rate = await upholdSdk.getTicker(key);
-        pairs[key] = {
-          ask: rate.ask,
+  const getResultsFromCache = async () => {
+    const pairs = cache[currency];
+    setPairExchangeRates(pairs);
+  };
+
+  const fetchTickers = async () => {
+    try {
+      const response = await upholdSdk.getTicker(currency);
+      setIsError(false);
+      return response;
+    } catch (error) {
+      console.error(`Error fetching tickers for currency`, error);
+      setIsError(true);
+    }
+  };
+
+  const handleTickersResult = (pairs, rates) => {
+    if (!pairs || !rates) return;
+
+    rates.forEach((rate) => {
+      if (pairs[rate.pair] !== undefined) {
+        pairs[rate.pair] = {
+          bid: rate.bid,
           currency: rate.currency,
         };
-      } catch (error) {
-        console.error(`Error fetching rate for ${key}:`, error);
       }
-    }
-    setIsLoading(false);
-    console.log(pairs);
+    });
     setPairExchangeRates(pairs);
+    setCache((prev) => ({ ...prev, [currency]: pairs }));
   };
 
   const parseAmountToConvert = () => {
@@ -69,7 +95,7 @@ function App() {
             const rate = pairExchangeRates[pair];
             return (
               <AmountCurrencyItem
-                amount={rate.ask * parseAmountToConvert()}
+                amount={rate.bid * parseAmountToConvert()}
                 currencyId={rate.currency}
                 key={rate.currency}
               />
@@ -100,8 +126,15 @@ function App() {
         />
         {isLoading && <h2>Loading...</h2>}
         {!isLoading &&
+          !isError &&
           Object.keys(pairExchangeRates).length !== 0 &&
           displayExchangeRateResults()}
+        {!isLoading && isError && (
+          <ErrorMessage
+            subtitle="Sorry, there was an error completing the request."
+            footerMessage="Try a different currency or check back later."
+          />
+        )}
       </div>
     </>
   );

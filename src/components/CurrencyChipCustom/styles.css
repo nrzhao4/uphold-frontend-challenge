@@ -4,7 +4,8 @@
   padding: 0.5rem;
   border-radius: 1rem;
   background-color: #ffffff;
-  transition: background-color 0.3s, border-color 0.3s;
+  transition: background-color 0.3s;
+  border: 2px solid transparent;
 }
 
 .currency-chip:not(.disabled):hover {

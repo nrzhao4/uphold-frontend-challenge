@@ -1,0 +1,20 @@
+.error-message-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background-color: #e05a5a;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.footer-message {
+  font-size: 1rem;
+}

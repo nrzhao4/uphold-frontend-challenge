@@ -24,7 +24,7 @@ function CurrencyChipCustom({
   };
 
   return (
-    <span
+    <button
       className={`currency-chip ${isDisabled ? "disabled" : ""}`}
       onClick={handleClick}
     >
@@ -35,7 +35,7 @@ function CurrencyChipCustom({
       />
       <strong>{currency}</strong>
       {showDropdownIcon && <img src={dropdownIcon} alt="Dropdown icon" />}
-    </span>
+    </button>
   );
 }
 

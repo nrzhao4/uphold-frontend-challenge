@@ -1,0 +1,16 @@
+.amount-currency-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border: solid #ededed 1px;
+  border-radius: 0.25rem;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+}
+
+.currency-name {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}

@@ -2,24 +2,27 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import upholdSdk from "./utils/uphold-sdk";
 import CurrencyInput from "./components/CurrencyInput/CurrencyInput";
+import AmountCurrencyItem from "./components/AmountCurrencyItem/AmountCurrencyItem";
 import { supportedCurrencies } from "./constants/supported-currencies";
 
 function App() {
   const [currencyOptions, setCurrencyOptions] = useState([]);
-  const [amountToConvert, setAmountToConvert] = useState("1");
+  const [amountToConvert, setAmountToConvert] = useState("100.00");
   const [currency, setCurrency] = useState("USD");
   const [pairExchangeRates, setPairExchangeRates] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  function handleAmountToConvertChange(amount) {
-    setAmountToConvert(amount);
-  }
+  useEffect(() => {
+    setCurrencyOptions(supportedCurrencies);
+    // TODO: clean up
+  });
 
-  function handleSelectedCurrencyChange(currencyId) {
-    setCurrency(currencyId);
-  }
+  useEffect(() => {
+    const pairs = definePairs();
+    fetchPairExchangeRate(pairs);
+  }, [currency]);
 
-  function definePairs() {
+  const definePairs = () => {
     const pairs = {};
     supportedCurrencies.forEach((supportedCurrency) => {
       if (supportedCurrencies !== currency) {
@@ -29,14 +32,9 @@ function App() {
     });
     console.log(pairs);
     return pairs;
-  }
+  };
 
-  useEffect(() => {
-    const pairs = definePairs();
-    fetchPairExchangeRate(pairs);
-  }, [currency]);
-
-  async function fetchPairExchangeRate(pairs) {
+  const fetchPairExchangeRate = async (pairs) => {
     setIsLoading(true);
     const keys = Object.keys(pairs);
     for (const key of keys) {
@@ -53,12 +51,15 @@ function App() {
     setIsLoading(false);
     console.log(pairs);
     setPairExchangeRates(pairs);
-  }
+  };
 
-  useEffect(() => {
-    setCurrencyOptions(supportedCurrencies);
-    // TODO: clean up
-  });
+  const parseAmountToConvert = () => {
+    const parsed = parseFloat(amountToConvert);
+    if (isNaN(parsed)) {
+      return 0;
+    }
+    return parsed;
+  };
 
   const displayExchangeRateResults = () => {
     return (
@@ -67,9 +68,11 @@ function App() {
           if (pairExchangeRates[pair] !== null) {
             const rate = pairExchangeRates[pair];
             return (
-              <h2 key={pair}>
-                {rate.ask * amountToConvert} {rate.currency}
-              </h2>
+              <AmountCurrencyItem
+                amount={rate.ask * parseAmountToConvert()}
+                currencyId={rate.currency}
+                key={rate.currency}
+              />
             );
           }
         })}
@@ -79,16 +82,27 @@ function App() {
 
   return (
     <>
-      <CurrencyInput
-        currencyOptions={currencyOptions}
-        updateAmount={handleAmountToConvertChange}
-        updateSelectedCurrency={handleSelectedCurrencyChange}
-        isDisabled={isLoading}
-      />
-      {isLoading && <h2>Loading...</h2>}
-      {!isLoading &&
-        Object.keys(pairExchangeRates).length !== 0 &&
-        displayExchangeRateResults()}
+      <div className="header-content">
+        <h2>Currency Converter</h2>
+        <p className="subtitle">
+          Receive competitive and transparent pricing with no hidden spreads.
+          See how we compare.
+        </p>
+      </div>
+      <div className="body-content">
+        <CurrencyInput
+          currencyOptions={currencyOptions}
+          amount={amountToConvert}
+          setAmount={setAmountToConvert}
+          selectedCurrency={currency}
+          setSelectedCurrency={setCurrency}
+          isDisabled={isLoading}
+        />
+        {isLoading && <h2>Loading...</h2>}
+        {!isLoading &&
+          Object.keys(pairExchangeRates).length !== 0 &&
+          displayExchangeRateResults()}
+      </div>
     </>
   );
 }

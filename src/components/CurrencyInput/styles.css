@@ -1,0 +1,34 @@
+.currency-input-container {
+  padding: 0 4rem;
+  position: relative;
+}
+
+.input {
+  border: 2px solid transparent;
+  width: 20rem;
+  height: 2rem;
+  padding: 0.5rem 3.5rem 0.5rem 1rem;
+  outline: none;
+  overflow: hidden;
+  background-color: #ececec9b;
+  border-radius: 0.5rem;
+  transition: all 0.5s;
+  color: #090d14;
+  font-size: 24px;
+}
+
+.input:disabled {
+  opacity: 0.5;
+}
+
+.input:not(:disabled):hover,
+.input:not(:disabled):focus {
+  border: 2px solid #49cc68;
+  background-color: #ffffff;
+}
+
+.menu-chip {
+  position: absolute;
+  right: 11rem;
+  top: 0.5rem;
+}

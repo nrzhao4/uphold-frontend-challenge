@@ -1,0 +1,17 @@
+.currency-chip {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 1rem;
+  background-color: #ffffff;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.currency-chip:not(.disabled):hover {
+  background-color: #c6ffd3;
+}
+
+.currency-chip.disabled {
+  opacity: 0.5;
+  cursor: default;
+}

@@ -5,16 +5,33 @@
   text-align: center;
 }
 
-.row {
+.header-content {
+  padding: 2rem;
+}
+
+.body-content {
   display: flex;
-  flex-direction: row;
-  gap: 1em;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: grey;
+}
+
+.currency-input {
+  padding-top: 2rem;
 }
 
 .columns {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .columns {
+    grid-template-columns: 1fr 1fr;
+  }
 }

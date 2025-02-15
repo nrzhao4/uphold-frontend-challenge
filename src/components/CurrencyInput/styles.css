@@ -1,13 +1,15 @@
-.currency-input-container {
-  padding: 0 4rem;
+.container {
   position: relative;
+  width: 18.5rem;
+  height: 3.25rem;
+  display: block;
 }
 
 .input {
   border: 2px solid transparent;
-  width: 20rem;
+  width: 10rem;
   height: 2rem;
-  padding: 0.5rem 3.5rem 0.5rem 1rem;
+  padding: 0.5rem 7rem 0.5rem 1rem;
   outline: none;
   overflow: hidden;
   background-color: #ececec9b;
@@ -15,6 +17,16 @@
   transition: all 0.5s;
   color: #090d14;
   font-size: 24px;
+}
+
+@media (min-width: 768px) {
+  .input {
+    width: 13rem;
+  }
+
+  .container {
+    width: 21.5rem;
+  }
 }
 
 .input:disabled {
@@ -29,6 +41,6 @@
 
 .menu-chip {
   position: absolute;
-  right: 11rem;
   top: 0.5rem;
+  right: 1rem;
 }

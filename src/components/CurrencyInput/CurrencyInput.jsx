@@ -52,27 +52,30 @@ function CurrencyInput({
   };
 
   return (
-    <div className="currency-input-container">
-      <input
-        name="myInput"
-        type="text"
-        value={amount}
-        onChange={handleAmountChange}
-        disabled={isDisabled}
-        className="input"
-      />
-      <div className="menu-chip" role="button">
-        <CurrencyChipCustom
-          currency={selectedCurrency}
-          showDropdownIcon
-          onClick={handleClick}
-          aria-controls={open ? "currency-select" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-          isDisabled={isDisabled}
-          id="currency-select-button"
+    <div className="container">
+      <div className="test">
+        <input
+          name="myInput"
+          type="text"
+          value={amount}
+          onChange={handleAmountChange}
+          disabled={isDisabled}
+          className="input"
         />
+        <div className="menu-chip" role="button">
+          <CurrencyChipCustom
+            currency={selectedCurrency}
+            showDropdownIcon
+            onClick={handleClick}
+            aria-controls={open ? "currency-select" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            isDisabled={isDisabled}
+            id="currency-select-button"
+          />
+        </div>
       </div>
+
       <Menu
         id="currency-select"
         anchorEl={anchorEl}

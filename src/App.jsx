@@ -98,10 +98,21 @@ function App() {
                 amount={rate.bid * parseAmountToConvert()}
                 currencyId={rate.currency}
                 key={rate.currency}
+                isLoading={false}
               />
             );
           }
         })}
+      </div>
+    );
+  };
+
+  const displayLoadingExchangeRates = () => {
+    return (
+      <div className="columns">
+        {Array.from({ length: 20 }, (_, i) => (
+          <AmountCurrencyItem isLoading={true} key={i} />
+        ))}
       </div>
     );
   };
@@ -124,7 +135,7 @@ function App() {
           setSelectedCurrency={setCurrency}
           isDisabled={isLoading}
         />
-        {isLoading && <h2>Loading...</h2>}
+        {isLoading && displayLoadingExchangeRates()}
         {!isLoading &&
           !isError &&
           Object.keys(pairExchangeRates).length !== 0 &&

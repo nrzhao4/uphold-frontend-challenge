@@ -8,6 +8,7 @@ import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 
 function App() {
   const [currencyOptions, setCurrencyOptions] = useState([]);
+  const [amount, setAmount] = useState("100.00");
   const [amountToConvert, setAmountToConvert] = useState("100.00");
   const [currency, setCurrency] = useState("USD");
   const [pairExchangeRates, setPairExchangeRates] = useState({});
@@ -17,24 +18,51 @@ function App() {
 
   useEffect(() => {
     setCurrencyOptions(supportedCurrencies);
-    // TODO: clean up
-  });
+  }, []);
 
   useEffect(() => {
+    const DEBOUNCE_MS = 500;
+    const delayInputTimeout = setTimeout(() => {
+      setAmountToConvert(amount);
+    }, DEBOUNCE_MS);
+
+    return () => clearTimeout(delayInputTimeout);
+  }, [amount]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getTickers = async () => {
+      if (cache[currency] !== undefined) {
+        getResultsFromCache();
+        return;
+      }
+      setIsLoading(true);
+      const pairs = definePairs();
+      try {
+        const rates = await fetchTickers({ signal: controller.signal });
+        if (isMounted) {
+          handleTickersResult(pairs, rates);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error("Fetch error:", error);
+        }
+      }
+    };
+
     getTickers();
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
   }, [currency]);
 
-  const getTickers = async () => {
-    if (cache[currency] !== undefined) {
-      getResultsFromCache();
-      return;
-    }
-
-    setIsLoading(true);
-    const pairs = definePairs();
-    const rates = await fetchTickers();
-    handleTickersResult(pairs, rates);
-    setIsLoading(false);
+  const getResultsFromCache = async () => {
+    const pairs = cache[currency];
+    setPairExchangeRates(pairs);
   };
 
   const definePairs = () => {
@@ -46,11 +74,6 @@ function App() {
       }
     });
     return pairs;
-  };
-
-  const getResultsFromCache = async () => {
-    const pairs = cache[currency];
-    setPairExchangeRates(pairs);
   };
 
   const fetchTickers = async () => {
@@ -129,8 +152,8 @@ function App() {
       <div className="body-content">
         <CurrencyInput
           currencyOptions={currencyOptions}
-          amount={amountToConvert}
-          setAmount={setAmountToConvert}
+          amount={amount}
+          setAmount={setAmount}
           selectedCurrency={currency}
           setSelectedCurrency={setCurrency}
           isDisabled={isLoading}

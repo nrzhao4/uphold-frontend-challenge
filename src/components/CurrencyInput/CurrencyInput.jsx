@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
@@ -26,13 +26,6 @@ function CurrencyInput({
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-
-  useEffect(() => {
-    const delayInputTimeout = setTimeout(() => {
-      setAmount(amount);
-    }, 500);
-    return () => clearTimeout(delayInputTimeout);
-  }, [amount, 500]);
 
   const handleAmountChange = (event) => {
     const amount = event.target.value;

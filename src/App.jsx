@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import upholdSdk from "./utils/uphold-sdk";
 import CurrencyInput from "./components/CurrencyInput/CurrencyInput";
 import AmountCurrencyItem from "./components/AmountCurrencyItem/AmountCurrencyItem";
 import { supportedCurrencies } from "./constants/supported-currencies";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
+
+import useCurrencyRates from "./hooks/useCurrencyRates";
 
 function App() {
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [amount, setAmount] = useState("100.00");
   const [amountToConvert, setAmountToConvert] = useState("100.00");
   const [currency, setCurrency] = useState("USD");
-  const [pairExchangeRates, setPairExchangeRates] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
   const [cache, setCache] = useState({});
+  const { pairExchangeRates, isLoading, isError } = useCurrencyRates(
+    currency,
+    cache,
+    setCache
+  );
 
   useEffect(() => {
     setCurrencyOptions(supportedCurrencies);
@@ -28,79 +31,6 @@ function App() {
 
     return () => clearTimeout(delayInputTimeout);
   }, [amount]);
-
-  useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
-
-    const getTickers = async () => {
-      if (cache[currency] !== undefined) {
-        getResultsFromCache();
-        return;
-      }
-      setIsLoading(true);
-      const pairs = definePairs();
-      try {
-        const rates = await fetchTickers({ signal: controller.signal });
-        if (isMounted) {
-          handleTickersResult(pairs, rates);
-          setIsLoading(false);
-        }
-      } catch (error) {
-        if (error.name !== "AbortError") {
-          console.error("Fetch error:", error);
-        }
-      }
-    };
-
-    getTickers();
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
-  }, [currency]);
-
-  const getResultsFromCache = async () => {
-    const pairs = cache[currency];
-    setPairExchangeRates(pairs);
-  };
-
-  const definePairs = () => {
-    const pairs = {};
-    supportedCurrencies.forEach((supportedCurrency) => {
-      if (supportedCurrencies !== currency) {
-        const pairName = currency + supportedCurrency.id;
-        pairs[pairName] = null;
-      }
-    });
-    return pairs;
-  };
-
-  const fetchTickers = async () => {
-    try {
-      const response = await upholdSdk.getTicker(currency);
-      setIsError(false);
-      return response;
-    } catch (error) {
-      console.error(`Error fetching tickers for currency`, error);
-      setIsError(true);
-    }
-  };
-
-  const handleTickersResult = (pairs, rates) => {
-    if (!pairs || !rates) return;
-
-    rates.forEach((rate) => {
-      if (pairs[rate.pair] !== undefined) {
-        pairs[rate.pair] = {
-          bid: rate.bid,
-          currency: rate.currency,
-        };
-      }
-    });
-    setPairExchangeRates(pairs);
-    setCache((prev) => ({ ...prev, [currency]: pairs }));
-  };
 
   const parseAmountToConvert = () => {
     const parsed = parseFloat(amountToConvert);

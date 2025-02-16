@@ -10,7 +10,10 @@ ErrorMessage.propTypes = {
 
 function ErrorMessage({ title, subtitle, footerMessage }) {
   return (
-    <div className="error-message-container">
+    <div
+      className="error-message-container"
+      data-testid="error-message-component"
+    >
       {title && <h4 className="title">{title}</h4>}
       {subtitle && <strong>{subtitle}</strong>}
       {footerMessage && <p className="footer-message">{footerMessage}</p>}

@@ -1,8 +1,8 @@
 export const getPairs = (currency, supportedCurrencies) => {
   const pairs = {};
   supportedCurrencies.forEach((supportedCurrency) => {
-    if (supportedCurrencies !== currency) {
-      const pairName = currency + supportedCurrency.id;
+    if (supportedCurrency.name !== currency) {
+      const pairName = currency + supportedCurrency.name;
       pairs[pairName] = null;
     }
   });
@@ -30,9 +30,14 @@ export const adjustAmountPrecision = (amount) => {
   const integerPart = amountStr.split(".")[0];
 
   if (integerPart.length <= INT_PART_MAX_LENGTH) {
-    return amountStr.substring(0, 7);
+    const SUBSTRING_LENGTH = 8;
+    return amountStr.substring(0, SUBSTRING_LENGTH);
   }
 
   const decimalPart = amountStr.split(".")[1];
-  return integerPart + "." + decimalPart.substring(0, 2);
+  let result = integerPart;
+  if (decimalPart) {
+    result += `.${decimalPart.substring(0, 2)}`;
+  }
+  return result;
 };

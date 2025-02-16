@@ -32,8 +32,9 @@ function CurrencyChipCustom({
         alt={currency}
         src={supportedCurrenciesIcons[currency.toLowerCase()]}
         sx={{ width: 16, height: 16 }}
+        data-testid="currency-avatar"
       />
-      <strong>{currency}</strong>
+      <strong data-testid="currency-name">{currency}</strong>
       {showDropdownIcon && <img src={dropdownIcon} alt="Dropdown icon" />}
     </button>
   );

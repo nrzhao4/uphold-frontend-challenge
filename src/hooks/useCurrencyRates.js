@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { fetchTickers } from "../components/api/api";
-import { getPairs, handleTickersResult } from "../helpers/exchangeRatesHelper";
+import {
+  getPairs,
+  handleTickersResult,
+} from "../helpers/exchangeRatesHelper/exchangeRatesHelper";
 import { supportedCurrencies } from "../constants/supported-currencies";
-import { shouldClearCache } from "../helpers/cacheHelper";
+import { shouldClearCache } from "../helpers/cacheHelper/cacheHelper";
 
 const useCurrencyRates = (currency, cache, setCache) => {
   const [pairExchangeRates, setPairExchangeRates] = useState({});

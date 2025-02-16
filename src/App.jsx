@@ -24,7 +24,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const DEBOUNCE_MS = 500;
+    const DEBOUNCE_MS = 200;
     const delayInputTimeout = setTimeout(() => {
       setAmountToConvert(amount);
     }, DEBOUNCE_MS);
@@ -87,10 +87,15 @@ function App() {
           selectedCurrency={currency}
           setSelectedCurrency={setCurrency}
           isDisabled={isLoading}
+          placeholder={"0.00"}
         />
         {isLoading && displayLoadingExchangeRates()}
+        {!isLoading && !isError && !amount && (
+          <p className="subtitle">Enter an amount to see the rates</p>
+        )}
         {!isLoading &&
           !isError &&
+          amount > 0 &&
           Object.keys(pairExchangeRates).length !== 0 &&
           displayExchangeRateResults()}
         {!isLoading && isError && (

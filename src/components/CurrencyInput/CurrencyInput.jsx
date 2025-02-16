@@ -14,6 +14,7 @@ CurrencyInput.propTypes = {
   selectedCurrency: PropTypes.string.isRequired,
   setSelectedCurrency: PropTypes.func.isRequired,
   isDisabled: PropTypes.bool,
+  placeholder: PropTypes.string,
 };
 
 function CurrencyInput({
@@ -23,6 +24,7 @@ function CurrencyInput({
   selectedCurrency,
   setSelectedCurrency,
   isDisabled,
+  placeholder,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -48,14 +50,15 @@ function CurrencyInput({
     <div className="container">
       <div className="test">
         <input
-          name="myInput"
+          name="amountInput"
           type="text"
           value={amount}
           onChange={handleAmountChange}
           disabled={isDisabled}
           className="input"
+          placeholder={placeholder}
         />
-        <div className="menu-chip" role="button">
+        <div className="menu-chip">
           <CurrencyChipCustom
             currency={selectedCurrency}
             showDropdownIcon
@@ -88,8 +91,9 @@ function CurrencyInput({
                 handleSelectedCurrencyChange(currency.id);
                 handleClose();
               }}
+              data-testid="dropdown-menu"
             >
-              <ListItemIcon>
+              <ListItemIcon data-testid="dropdown-menu-item">
                 <Avatar
                   alt={currency.name}
                   src={supportedCurrenciesIcons[currency.id.toLowerCase()]}

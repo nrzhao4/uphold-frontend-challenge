@@ -6,7 +6,6 @@ import AmountCurrencyItem from "./AmountCurrencyItem.jsx";
 describe("AmountCurrencyItem", () => {
   it("should render the component", () => {
     render(<AmountCurrencyItem amount={0} currencyId="foo" />);
-    screen.debug();
   });
   it("should display formatted amount, avatar, and currency name when isLoading is false", () => {
     render(<AmountCurrencyItem amount={0} currencyId="foo" />);

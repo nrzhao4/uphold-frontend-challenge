@@ -4,7 +4,7 @@ import "./styles.css";
 import Avatar from "@mui/material/Avatar";
 import { supportedCurrenciesIcons } from "../../constants/supported-currencies";
 import { Skeleton } from "@mui/material";
-import { adjustAmountPrecision } from "../../helpers/exchangeRatesHelper";
+import { adjustAmountPrecision } from "../../helpers/exchangeRatesHelper/exchangeRatesHelper";
 
 AmountCurrencyItem.propTypes = {
   amount: PropTypes.number,

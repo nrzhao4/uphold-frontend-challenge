@@ -4,6 +4,7 @@ import CurrencyInput from "./components/CurrencyInput/CurrencyInput";
 import AmountCurrencyItem from "./components/AmountCurrencyItem/AmountCurrencyItem";
 import { supportedCurrencies } from "./constants/supported-currencies";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
+import Logo from "./assets/logo.svg";
 
 import useCurrencyRates from "./hooks/useCurrencyRates";
 
@@ -73,6 +74,7 @@ function App() {
   return (
     <>
       <div className="header-content">
+        <img src={Logo} />
         <h2>Currency Converter</h2>
         <p className="subtitle">
           Receive competitive and transparent pricing with no hidden spreads.

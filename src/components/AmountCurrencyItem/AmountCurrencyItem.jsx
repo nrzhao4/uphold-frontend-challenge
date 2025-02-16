@@ -4,6 +4,7 @@ import "./styles.css";
 import Avatar from "@mui/material/Avatar";
 import { supportedCurrenciesIcons } from "../../constants/supported-currencies";
 import { Skeleton } from "@mui/material";
+import { adjustAmountPrecision } from "../../helpers/exchangeRatesHelper";
 
 AmountCurrencyItem.propTypes = {
   amount: PropTypes.number,
@@ -13,15 +14,16 @@ AmountCurrencyItem.propTypes = {
 
 function AmountCurrencyItem({ amount, currencyId, isLoading }) {
   const formattedAmount = () => {
-    const MAX_AMOUNT_LENGTH = 7;
-    return amount.toString().substring(0, MAX_AMOUNT_LENGTH);
+    return adjustAmountPrecision(amount);
   };
 
   return (
     <div className="amount-currency-item">
       {!isLoading && (
         <>
-          <strong data-testid="formatted-amount">{formattedAmount()}</strong>
+          <strong data-testid="formatted-amount" className="amount">
+            {formattedAmount()}
+          </strong>
           <span className="currency-name">
             <Avatar
               data-testid="currency-avatar"

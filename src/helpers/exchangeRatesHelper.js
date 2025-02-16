@@ -23,3 +23,16 @@ export const handleTickersResult = (pairs, rates) => {
 
   return pairs;
 };
+
+export const adjustAmountPrecision = (amount) => {
+  const INT_PART_MAX_LENGTH = 5;
+  const amountStr = amount.toString();
+  const integerPart = amountStr.split(".")[0];
+
+  if (integerPart.length <= INT_PART_MAX_LENGTH) {
+    return amountStr.substring(0, 7);
+  }
+
+  const decimalPart = amountStr.split(".")[1];
+  return integerPart + "." + decimalPart.substring(0, 2);
+};

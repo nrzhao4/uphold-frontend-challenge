@@ -2,17 +2,22 @@ import { useState, useEffect } from "react";
 import { fetchTickers } from "../components/api/api";
 import { getPairs, handleTickersResult } from "../helpers/exchangeRatesHelper";
 import { supportedCurrencies } from "../constants/supported-currencies";
+import { shouldClearCache } from "../helpers/cacheHelper";
 
 const useCurrencyRates = (currency, cache, setCache) => {
   const [pairExchangeRates, setPairExchangeRates] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [cacheInitTimestamp, setCacheInitTimestamp] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
 
     const getTickers = async () => {
-      if (cache[currency]) {
+      const TEN_MINUTES_IN_MS = 600000;
+      if (shouldClearCache(cacheInitTimestamp, TEN_MINUTES_IN_MS)) {
+        clearCache();
+      } else if (cache[currency]) {
         setPairExchangeRates(cache[currency]);
         return;
       }
@@ -22,11 +27,15 @@ const useCurrencyRates = (currency, cache, setCache) => {
       const pairs = getPairs(currency, supportedCurrencies);
       try {
         const rates = await fetchTickers(currency);
-        if (isMounted) {
-          const processedRates = handleTickersResult(pairs, rates);
-          setPairExchangeRates(processedRates);
-          setCache((prev) => ({ ...prev, [currency]: processedRates }));
+        if (!isMounted) return;
+
+        const processedRates = handleTickersResult(pairs, rates);
+        setPairExchangeRates(processedRates);
+
+        if (!cacheInitTimestamp) {
+          setCacheInitTimestamp(Date.now());
         }
+        setCache((prev) => ({ ...prev, [currency]: processedRates }));
         // eslint-disable-next-line no-unused-vars
       } catch (error) {
         setIsError(true);
@@ -40,7 +49,12 @@ const useCurrencyRates = (currency, cache, setCache) => {
     return () => {
       isMounted = false;
     };
-  }, [currency, cache, setCache]);
+  }, [currency]);
+
+  const clearCache = () => {
+    setCache({});
+    setCacheInitTimestamp(null);
+  };
 
   return { pairExchangeRates, isLoading, isError };
 };

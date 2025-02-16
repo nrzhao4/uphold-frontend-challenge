@@ -5,10 +5,14 @@ After cloning the repository, create a `.env` file in the project root.
 - You can copy `.env.example`
 - Note: No authentication is needed for any of the current feature, so any clientId and secret will work
 
+Install **[this browser extension](https://eff.org)**. This prevents CORS errors when connecting to the Uphold API.
+
 Run the following commands:
 
 - `npm install`
 - `npm run dev`
+
+The project will be running on <http://localhost:5173/>
 
 # Running unit tests
 

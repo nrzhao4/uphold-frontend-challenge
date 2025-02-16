@@ -91,9 +91,8 @@ function CurrencyInput({
                 handleSelectedCurrencyChange(currency.id);
                 handleClose();
               }}
-              data-testid="dropdown-menu"
             >
-              <ListItemIcon data-testid="dropdown-menu-item">
+              <ListItemIcon>
                 <Avatar
                   alt={currency.name}
                   src={supportedCurrenciesIcons[currency.id.toLowerCase()]}

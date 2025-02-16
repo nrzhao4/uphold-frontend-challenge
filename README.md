@@ -1,3 +1,21 @@
+# How to run this project
+
+After cloning the repository, create a `.env` file in the project root.
+
+- You can copy `.env.example`
+- Note: No authentication is needed for any of the current feature, so any clientId and secret will work
+
+Run the following commands:
+
+- `npm install`
+- `npm run dev`
+
+# Running unit tests
+
+This project uses vitest + React Testing Library for unit testing
+
+- `npm test`
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
